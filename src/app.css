@@ -1,0 +1,131 @@
+/* Global CSS Variables: https://www.w3schools.com/css/css3_variables.asp */
+/* Reference these in your CSS to get the same color as the mockups */
+
+:root {
+  --actionBackgroundColor: #f76b8a;
+  --actionTextColor: white;
+  --activeColor: #66bfbf;
+  --standardBackgroundColor: #fcfefe;
+  --alternativeBackgroundColor: #eaf6f6;
+  --standardTextColor: black;
+  --lightColor: lightgray;
+  --moderateColor: darkgray;
+}
+
+@media only screen and (max-width: 600px) {
+  .logo {
+    display: none;
+  }
+
+  nav {
+    justify-content: space-evenly;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  nav {
+    justify-content: space-between;
+  }
+}
+
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1320px;
+  }
+}
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+#me {
+  height : 50px;
+  width: 50px;
+  border-radius: 50%;
+  text-align: right;
+}
+
+body {
+  background-color: var(--alternativeBackgroundColor);
+}
+
+div button {
+  background-color: var(--actionBackgroundColor);
+  color: white;
+}
+
+ul li {
+  margin-block: 5px;
+}
+
+.selections > * {
+  text-decoration: underline;
+}
+
+.logo {
+  color: black;
+  font-size: 30px;
+}
+
+.interactive {
+  margin: 5px;
+}
+
+.cell{
+  margin: 15px;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: white;
+}
+
+.saveBtn {
+  margin: 15px;
+  padding-inline: 30px;
+  padding-block: 10px;
+
+  font-size: 20px;
+  color: white;
+  border-radius: 10px;
+  border: none;
+
+  background-color: #f76b8a;
+}
+
+.bottomInput {
+    outline: 0;
+    border-width: 0 0 2px;
+    border-color: lightgrey;
+}
+
+* {
+  color: black;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
