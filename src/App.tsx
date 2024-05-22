@@ -1,5 +1,6 @@
 import './app.css';
 import NavBar from './components/NavBar';
+import axios from 'axios';
 
 function App() {
     /*
@@ -10,7 +11,7 @@ function App() {
     */
     return (
         <>
-            <NavBar />
+            <NavBar name={"Sol"}/>
         </>
     );
 }

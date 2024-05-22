@@ -1,12 +1,18 @@
 import { NavLink, Route, Routes, BrowserRouter } from "react-router-dom";
-import profilePic from "../assets/profile.jpeg";
+import defProfile from "../assets/defProfile.jpeg"
 import "../app.css";
 import EQ from "./EQ";
 import LD from "./LD";
 import VD from "./VD";
 import Profile from "./Profile";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-function NavBar() {
+interface UserProp{
+    name: string
+}
+
+const NavBar = ({name}: UserProp) => {
     /*
     NavBar is just a component that leads to other components. Mainly, it leads the users to
     edit question page. Since every components should be connected from this NavBar component,
@@ -19,6 +25,15 @@ function NavBar() {
     with css. I still do not know how to style the components within the css file. I definitely should
     ask professor about this matter.
     */
+    
+    const [profile, setProfile] = useState(defProfile);
+    useEffect(() => {
+        axios.get("http://localhost:2424/getProfileInfo?name=" + name)
+            .then((res) => {
+                setProfile(res.data.profile);
+            })
+            .catch((err) => console.log(err))
+    }, [])
 
     const ROUTE = [
         {
@@ -27,7 +42,7 @@ function NavBar() {
             element: <LD />,
         },
         {
-            link: "/",
+            link: "/EQ",
             text: "Edit Questions",
             element: <EQ />,
         },
@@ -38,7 +53,7 @@ function NavBar() {
         },
         {
             link: "/profile",
-            element: <Profile />
+            element: <Profile name={name} img={profile || ""} setImg={setProfile}/>
         }
     ];
 
@@ -79,7 +94,7 @@ function NavBar() {
                         ))}
                     </div>
                     <NavLink to={ROUTE[3].link}>
-                        <img src={profilePic} id="me" />
+                        <img src={profile} id="me" />
                     </NavLink>
                 </nav>
                 <Routes>

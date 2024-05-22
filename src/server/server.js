@@ -1,5 +1,6 @@
 import express from "express";
 import * as mysql from "mysql2";
+import { v2 as cloudinary} from "cloudinary";
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -9,7 +10,7 @@ const db = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "",
-    database: "hw3",
+    database: "hw4",
 });
 
 // @@@@@@@@@@@@@@@@@@@@@@ GET CALL @@@@@@@@@@@@@@@@@@@@@@@
@@ -66,10 +67,26 @@ app.get("/getQuestion", (req, res) => {
     })
 })
 
-app.get("/getProfilePic", (req, res) => {
+app.get("/getProfileInfo", (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
+    var name = req.query["name"];
 
-    console.log("Get the cloudinary link from the database");
+    const sqlQuery = "SELECT * FROM User WHERE name = '" + name + "';";
+    db.query(sqlQuery, (err, result) => {
+        if(err) console.log(err);
+        result = result.map((r, idx) => {
+            return {
+                name: r.name,
+                email: r.email,
+                address1: r.address.split(" | ")[0],
+                address2: r.address.split(" | ")[1],
+                profile: r.profile
+            }
+        })
+
+        console.log(result[0]);
+        res.send(result[0]);
+    })
 })
 
 // @@@@@@@@@@@@@@@@@ POST CALL @@@@@@@@@@@@@@@@@@@@@
@@ -113,10 +130,23 @@ app.post("/saveLogData", (req, res) => {
     }
 })
 
-app.post("/changeProfilePic", (req, res) => {
+app.post("/saveProfileInfo", (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
 
-    console.log("Will change profile pic by sending the cloudinary link to the database.");
+    var info = JSON.parse(req.query["info"]);
+    console.log(info);
+
+    var name = info.name;
+    var email = info.email;
+    var profile = info.profile;
+    var address = info.address1 + " | " + info.address2;
+
+    const del = "DELETE FROM User;";
+    const sqlQuery = "INSERT INTO User(name, email, profile, address) VALUES (?, ?, ?, ?);";
+    db.query(del, (err) => {if(err) console.log(err)});
+    db.query(sqlQuery, [name, email, profile, address], (err, result) => {
+        if(err) console.log(err);
+    })
 })
 
 // @@@@@@@@@@@@@@@@@ START SERVER @@@@@@@@@@@@@@@@@@@@@

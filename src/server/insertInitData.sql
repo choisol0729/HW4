@@ -2,3 +2,4 @@ INSERT INTO Questions(id, text, answerType, multipleChoiceResponses, creationDat
 INSERT INTO Questions(id, text, answerType, multipleChoiceResponses, creationDate, deleted) VALUES (2, "Had a long walk today", "Boolean", "", "2024-04-27", FALSE);
 INSERT INTO Questions(id, text, answerType, multipleChoiceResponses, creationDate, deleted) VALUES (3, "One great thing that happened today", "Text", "", "2024-04-27", FALSE);
 INSERT INTO Questions(id, text, answerType, multipleChoiceResponses, creationDate, deleted) VALUES (4, "Today was a:", "Multiple Choice", "Ok day | Bad day | Great day", "2024-04-27", FALSE);
+INSERT INTO User(name, email, profile, address) VALUES ("Sol", "sol.choi@stonybrook.edu", "https://res.cloudinary.com/ddklwiz9z/image/upload/v1716381361/sltalmpqqmgp1hvtiljs.jpg", "119 Songdo Munhwaro | 120-1604")

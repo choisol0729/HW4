@@ -19,7 +19,7 @@ CREATE TABLE QuestionResponse(
 );
 
 CREATE TABLE User (
-    name TEXT,
+    name VARCHAR(255),
     email VARCHAR(255),
     profile VARCHAR(255),
     address VARCHAR(255)

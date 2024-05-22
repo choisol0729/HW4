@@ -1,32 +1,67 @@
-import profilePic from "../assets/profile.jpeg";
-import defProfile from "../assets//defProfile.jpeg"
+import defProfile from "../assets/defProfile.jpeg"
+import { useEffect, useRef, useState } from "react";
 import "../app.css"
-import { useRef, useState } from "react";
+import axios from "axios";
 
-// interface ProfileProp {
-//     name: string;
-//     email: string;
-//     address: string;
-//     profilepic: string;
-// }
+interface ProfileProp {
+    name: string;
+    img: string;
+    setImg: React.Dispatch<React.SetStateAction<string>>;
+}
 
-const Profile = () => {
-    const [profile, setProfile] = useState(profilePic);
-    const [info, setInfo] = useState({
-        name: "Sol Choi",
-        email: "choisol0729@gmail.com",
-        address: "119 Songdo Munhwaro | 120-1604",
-        profilepic: "",
-    });
+interface Info {
+    name: string;
+    email: string;
+    address1: string;
+    address2: string;
+    profile: string;
+}
 
+const Profile = ({name, img, setImg} : ProfileProp) => {
+    const [info, setInfo] = useState<Info>({name: "", email: "", address1: "", address2: "", profile: ""});
+    
     const hiddenFileInput = useRef<HTMLInputElement>(null);
+    const uploadPreset = "xcc6te6m";
+    
+    useEffect(() => {
+        axios.get<Info>("http://localhost:2424/getProfileInfo?name=" + name)
+        .then((res) => {
+            setInfo(res.data);
+        })
+    }, [])
 
-    const changeInfo = () => {
-        console.log("Changing info!");
+    const changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInfo({
+            ...info,
+            name: e.target.value
+        });
+    }
+
+    const changeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInfo({
+            ...info,
+            email: e.target.value
+        });
+    }
+
+    const changeAddr1 = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInfo({
+            ...info,
+            address1: e.target.value
+        });
+    }
+
+    const changeAddr2 = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInfo({
+            ...info,
+            address2: e.target.value
+        });
     }
 
     const save = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        console.log("Form Data:", info);
+        axios.post("http://localhost:2424/saveProfileInfo?info=" + JSON.stringify(info));
         console.log("Saved!");
     }
 
@@ -37,16 +72,36 @@ const Profile = () => {
             hiddenFileInput.current.click();
     }
 
-    const handleFileChange = (e: React.FormEvent<HTMLInputElement>) => {
+    const handleImgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         console.log("Received File!");
-        var img = (e.target as HTMLInputElement).files;
-        if(img?.length !== 0 && img !== null)
+        var img = e.target.files;
+        if(img?.length !== 0 && img !== null){
             console.log(img[0]);
+
+            const formData = new FormData();
+            formData.append('file', img[0]);
+            formData.append('upload_preset', uploadPreset);
+
+            axios.post("https://api-ap.cloudinary.com/v1_1/ddklwiz9z/image/upload", formData)
+            .then((res) => {
+                setImg(res.data.url);
+                setInfo({
+                    ...info,
+                    profile: res.data.url
+                })
+            })
+            .catch(err => console.log(err));
+        }
     }
 
     const removeImg = () => {
         console.log("Remove Image!");
-        setProfile(defProfile);
+        setImg(defProfile);
+
+        setInfo({
+            ...info,
+            profile: "https://res.cloudinary.com/ddklwiz9z/image/upload/v1716383089/tzcvb3rzpn8afwvl675k.jpg"
+        })
     }
 
     const logout = () => {
@@ -74,9 +129,9 @@ const Profile = () => {
                             display: "flex",
                             justifyContent: "space-around"
                         }}>
-                            <img src={profile} id="me" onClick={(e) => chooseNewImg((e as unknown) as React.FormEvent<HTMLButtonElement>)}></img>
-                            <input onChange={(e) => handleFileChange(e)} type="file" ref={hiddenFileInput} hidden/>
-                            <button id="profileImgButton" onClick={(e) => chooseNewImg(e)}>Choose New Image</button>
+                            <img src={img} id="me" onClick={(e) => chooseNewImg((e as unknown) as React.FormEvent<HTMLButtonElement>)}></img>
+                            <input onChange={handleImgChange} type="file" accept="image/*" ref={hiddenFileInput} hidden/>
+                            <button id="profileImgButton" onClick={chooseNewImg}>Choose New Image</button>
                             <a onClick={removeImg}>Remove Image</a>
                         </div>
                     </section>
@@ -86,7 +141,7 @@ const Profile = () => {
                         Name
                     </section>
                     <section>
-                        <input value={info.name} onChange={changeInfo} style={{width: "100%", margin: '5px', padding: '5px'}} required/>
+                        <input value={info.name} onChange={changeName} style={{width: "100%", margin: '5px', padding: '5px'}} required/>
                     </section>
                 </div>
                 <div className="cell">
@@ -94,7 +149,7 @@ const Profile = () => {
                         Email
                     </section>
                     <section>
-                        <input value={info.email} onChange={changeInfo} style={{width: "100%", margin: '5px', padding: '5px'}} required/>
+                        <input value={info.email} onChange={changeEmail} style={{width: "100%", margin: '5px', padding: '5px'}} required/>
                     </section>
                 </div>
                 <div className="cell">
@@ -102,8 +157,8 @@ const Profile = () => {
                         Address
                     </section>
                     <section>
-                        <input value={info.address.split(" | ")[0]} onChange={changeInfo} style={{width: "100%", margin: '5px', padding: '5px'}} required/>
-                        <input value={info.address.split(" | ")[1]} onChange={changeInfo} style={{width: "100%", margin: '5px', padding: '5px'}} required/>
+                        <input value={info.address1} onChange={changeAddr1} style={{width: "100%", margin: '5px', padding: '5px'}} required/>
+                        <input value={info.address2} onChange={changeAddr2} style={{width: "100%", margin: '5px', padding: '5px'}} required/>
                     </section>
                 </div>
                 <div style={{
