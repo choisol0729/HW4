@@ -7,6 +7,8 @@ interface ProfileProp {
     name: string;
     img: string;
     setImg: React.Dispatch<React.SetStateAction<string>>;
+    auth: boolean;
+    setAuth: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface Info {
@@ -17,7 +19,7 @@ interface Info {
     profile: string;
 }
 
-const Profile = ({name, img, setImg} : ProfileProp) => {
+const Profile = ({name, img, setImg, setAuth} : ProfileProp) => {
     const [info, setInfo] = useState<Info>({name: "", email: "", address1: "", address2: "", profile: ""});
     
     const hiddenFileInput = useRef<HTMLInputElement>(null);
@@ -106,6 +108,7 @@ const Profile = ({name, img, setImg} : ProfileProp) => {
 
     const logout = () => {
         console.log("Log out!");
+        setAuth(false);
     }
 
     return (

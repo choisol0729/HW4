@@ -17,7 +17,11 @@ export interface Cell {
     value?: any;
 }
 
-const EQ = () => {
+interface UserProp {
+    name : string;
+}
+
+const EQ = ({ name } : UserProp) => {
     const [cells, setCells] = useState<Cell[]>([]);
     const nv = useNavigate();
 
@@ -71,7 +75,7 @@ const EQ = () => {
                     justifyContent: "space-between",
                 }}
             >
-                <h2 style={{ marginInline: "10px" }}>Sol's Questions:</h2>
+                <h2 style={{ marginInline: "10px" }}>{name}'s Questions:</h2>
                 <a onClick={createCell}>
                     <PlusCircle className="bi bi-plus-circle" size={25} />
                 </a>

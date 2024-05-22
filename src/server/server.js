@@ -84,7 +84,6 @@ app.get("/getProfileInfo", (req, res) => {
             }
         })
 
-        console.log(result[0]);
         res.send(result[0]);
     })
 })
@@ -134,7 +133,6 @@ app.post("/saveProfileInfo", (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
 
     var info = JSON.parse(req.query["info"]);
-    console.log(info);
 
     var name = info.name;
     var email = info.email;

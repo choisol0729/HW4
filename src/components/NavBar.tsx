@@ -9,10 +9,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 interface UserProp{
-    name: string
+    name: string;
+    auth: boolean;
+    setAuth: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const NavBar = ({name}: UserProp) => {
+const NavBar = ({name, auth, setAuth}: UserProp) => {
     /*
     NavBar is just a component that leads to other components. Mainly, it leads the users to
     edit question page. Since every components should be connected from this NavBar component,
@@ -42,9 +44,9 @@ const NavBar = ({name}: UserProp) => {
             element: <LD />,
         },
         {
-            link: "/EQ",
+            link: "/",
             text: "Edit Questions",
-            element: <EQ />,
+            element: <EQ name={name} />,
         },
         {
             link: "/VD",
@@ -53,7 +55,7 @@ const NavBar = ({name}: UserProp) => {
         },
         {
             link: "/profile",
-            element: <Profile name={name} img={profile || ""} setImg={setProfile}/>
+            element: <Profile name={name} img={profile || ""} setImg={setProfile} auth={auth} setAuth={setAuth} />
         }
     ];
 
