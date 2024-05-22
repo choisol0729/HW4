@@ -58,10 +58,19 @@
   }
 }
 
+a {
+    text-decoration: underline;
+}
+
 .container {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
+}
+
+#profileImgButton {
+    background-color: var(--activeColor);
+    color: black;
 }
 
 #me {
@@ -69,6 +78,10 @@
   width: 50px;
   border-radius: 50%;
   text-align: right;
+}
+
+#me:hover {
+    cursor: pointer;
 }
 
 body {

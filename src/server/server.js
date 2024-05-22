@@ -66,6 +66,12 @@ app.get("/getQuestion", (req, res) => {
     })
 })
 
+app.get("/getProfilePic", (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+
+    console.log("Get the cloudinary link from the database");
+})
+
 // @@@@@@@@@@@@@@@@@ POST CALL @@@@@@@@@@@@@@@@@@@@@
 
 app.post("/swapNotDeleted", (req, res) => {
@@ -106,6 +112,14 @@ app.post("/saveLogData", (req, res) => {
         })
     }
 })
+
+app.post("/changeProfilePic", (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+
+    console.log("Will change profile pic by sending the cloudinary link to the database.");
+})
+
+// @@@@@@@@@@@@@@@@@ START SERVER @@@@@@@@@@@@@@@@@@@@@
 
 db.connect((err) => {
     if (err) throw err;
