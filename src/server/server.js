@@ -83,8 +83,18 @@ app.get("/getProfileInfo", (req, res) => {
                 profile: r.profile
             }
         })
-
         res.send(result[0]);
+    })
+})
+
+app.get("/checkAuth", (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+
+    const sqlQuery = "SELECT * FROM Login;";
+    db.query(sqlQuery, (err, result) => {
+        if(err) console.log(err);
+
+        res.send(result);
     })
 })
 
@@ -106,6 +116,8 @@ app.post("/saveEditQuestion", (req, res) => {
 
     for(let i = 0; i < data.length; i++){
         var opts = data[i].options.join(" | ");
+        
+        
 
         db.query(sqlQuery, [data[i].id, data[i].question, data[i].type, opts, data[i].date, data[i].deleted], (err, result) => {
             if(err) console.log(err);
@@ -143,6 +155,20 @@ app.post("/saveProfileInfo", (req, res) => {
     const sqlQuery = "INSERT INTO User(name, email, profile, address) VALUES (?, ?, ?, ?);";
     db.query(del, (err) => {if(err) console.log(err)});
     db.query(sqlQuery, [name, email, profile, address], (err, result) => {
+        if(err) console.log(err);
+    })
+})
+
+app.post("/updateAuth", (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    var auth = req.query["auth"];
+    var name = req.query["name"];
+
+    var sqlQuery;
+    if(auth == "false") sqlQuery = "DELETE FROM Login;";
+    else sqlQuery = "INSERT INTO Login(name, auth) VALUES (?, ?);";
+
+    db.query(sqlQuery, [name, 1], (err, result) => {
         if(err) console.log(err);
     })
 })

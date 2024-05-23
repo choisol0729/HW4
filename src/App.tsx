@@ -1,6 +1,6 @@
 import './app.css';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import NavBar from './components/NavBar';
 
 function App() {
@@ -20,23 +20,32 @@ function App() {
 
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("Final:", name);
 
         axios.get("http://localhost:2424/getProfileInfo?name=" + name)
-            .then((res) => {
-                if(res.data !== ""){
-                    console.log(res.data);
-                    setAuth(true);
-                }
-                else console.log("Wrong name, please try again");
-            })
+        .then((res) => {
+            if(res.data !== ""){
+                console.log("LOG IN!");
+                setAuth(true);
+                axios.post("http://localhost:2424/updateAuth?auth=true&name=" + name);
+            }
+            else console.log("Wrong name, please try again");
+        })
     }
+
+    useEffect(() => {
+        axios.get("http://localhost:2424/checkAuth")
+        .then((res) => {
+            setAuth(res.data[0].auth === 1 ? true : false);
+            setName(res.data[0].name);
+            console.log("Name: ", name);
+        }).catch(() => console.log("There is no logged in auth"))
+    }, [])
 
     return (
         <div>
             {!auth ? <><div style={{
                 height: "50vh",
-                width: "100vh",
+                width: "100vw",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center"
@@ -45,10 +54,10 @@ function App() {
                     <h1>Log In</h1>
                 </div>
             </div>
-            <div style={{width: "100vh", display: "flex", alignItems: "center", justifyContent: "center"}}>
+            <div style={{width: "100vw", display: "flex", alignItems: "center", justifyContent: "center"}}>
                 Type your correct name to continue / log in
             </div>
-            <div style={{width: "100vh", display: "flex", alignItems: "center", justifyContent: "center"}}>
+            <div style={{width: "100vw", display: "flex", alignItems: "center", justifyContent: "center"}}>
                 <form onSubmit={submit}>
                     <input type="text" required style={{margin: "10px"}} onChange={handleChange} value={name}/>
                     <button type='submit'>Enter</button>

@@ -48,12 +48,32 @@ const EQ = ({ name } : UserProp) => {
 
     const save = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        
-        axios.post("http://localhost:2424/swapNotDeleted")
-        var query = "http://localhost:2424/saveEditQuestion?data=" + JSON.stringify(cells);
-        axios.post(query)
 
-        navigateTo();
+        var newCell = cells;
+        var date = new Date();
+
+        axios.get("http://localhost:2424/api/questions")
+            .then((res) => {
+                for(let i = 0; i < res.data.length; i++){
+                    for(let j = 0; j < newCell.length; j++){
+                        if(res.data[i].id === newCell[j].id && res.data[i].question != newCell[j].question){
+                            console.log("Changed:", res.data[i], " @@ ", newCell[j]);
+                            newCell[j].id = parseInt((Math.random() * MAX_CELL_VALUE).toPrecision(16));
+                            newCell[j].date = "" + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+
+                            newCell.push({
+                                ...res.data[i],
+                                deleted : true
+                            });
+                        }
+                    }
+                }
+                setCells(newCell);
+                axios.post("http://localhost:2424/swapNotDeleted");
+                axios.post("http://localhost:2424/saveEditQuestion?data=" + JSON.stringify(newCell));
+
+                navigateTo();
+            })
     };
 
     useEffect(() => {

@@ -71,31 +71,6 @@ export const QuestionCell = ({cell, cells, setCells}: CellProps) => {
             }
             return v;
         }))
-
-        // var newCells = cells;
-        // var targetIdx = -1;
-        // var originalID = -1; 
-        // var originalQuestion = "";
-
-        // for(let i = 0; i < newCells.length; i++){
-        //     if(newCells[i].id === cell.id) {
-        //         targetIdx = i;
-        //         originalID = newCells[i].id;
-        //         originalQuestion = newCells[i].question;
-        //         newCells[i] = {
-        //             ...newCells[i],
-        //             id : parseInt((Math.random() * MAX_CELL_VALUE).toPrecision(16)),
-        //             question : e.target.value
-        //         }
-        //     }
-        // }
-
-        // setCells([...newCells, {
-        //     ...newCells[targetIdx],
-        //     id: originalID,
-        //     question: originalQuestion,
-        //     deleted : true
-        // }])
     }
 
     /* 

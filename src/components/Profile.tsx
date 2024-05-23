@@ -25,65 +25,60 @@ const Profile = ({name, img, setImg, setAuth} : ProfileProp) => {
     const hiddenFileInput = useRef<HTMLInputElement>(null);
     const uploadPreset = "xcc6te6m";
     
-    useEffect(() => {
-        axios.get<Info>("http://localhost:2424/getProfileInfo?name=" + name)
-        .then((res) => {
-            setInfo(res.data);
-        })
-    }, [])
-
     const changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInfo({
             ...info,
             name: e.target.value
         });
     }
-
+    
     const changeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInfo({
             ...info,
             email: e.target.value
         });
     }
-
+    
     const changeAddr1 = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInfo({
             ...info,
             address1: e.target.value
         });
     }
-
+    
     const changeAddr2 = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInfo({
             ...info,
             address2: e.target.value
         });
     }
-
+    
     const save = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log("Form Data:", info);
         axios.post("http://localhost:2424/saveProfileInfo?info=" + JSON.stringify(info));
+        axios.post("http://localhost:2424/updateAuth?name=Sol&auth=false");
+        axios.post("http://localhost:2424/updateAuth?auth=true&name=" + info.name);
         console.log("Saved!");
     }
-
+    
     const chooseNewImg = (e: React.FormEvent<HTMLButtonElement>) => {
         e.preventDefault();
         console.log("Choose New Image!");
         if(hiddenFileInput.current !== null)
             hiddenFileInput.current.click();
     }
-
+    
     const handleImgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         console.log("Received File!");
         var img = e.target.files;
         if(img?.length !== 0 && img !== null){
             console.log(img[0]);
-
+            
             const formData = new FormData();
             formData.append('file', img[0]);
             formData.append('upload_preset', uploadPreset);
-
+            
             axios.post("https://api-ap.cloudinary.com/v1_1/ddklwiz9z/image/upload", formData)
             .then((res) => {
                 setImg(res.data.url);
@@ -95,22 +90,30 @@ const Profile = ({name, img, setImg, setAuth} : ProfileProp) => {
             .catch(err => console.log(err));
         }
     }
-
+    
     const removeImg = () => {
         console.log("Remove Image!");
         setImg(defProfile);
-
+        
         setInfo({
             ...info,
             profile: "https://res.cloudinary.com/ddklwiz9z/image/upload/v1716383089/tzcvb3rzpn8afwvl675k.jpg"
         })
     }
-
+    
     const logout = () => {
         console.log("Log out!");
         setAuth(false);
+        axios.post("http://localhost:2424/updateAuth?auth=false&name=" + name);
     }
-
+    
+    useEffect(() => {
+        axios.get<Info>("http://localhost:2424/getProfileInfo?name=" + name)
+        .then((res) => {
+            setInfo(res.data);
+        })
+    }, [])
+    
     return (
         <div className="container">
             <div style={{

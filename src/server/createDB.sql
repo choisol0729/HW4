@@ -24,3 +24,8 @@ CREATE TABLE User (
     profile VARCHAR(255),
     address VARCHAR(255)
 );
+
+CREATE TABLE Login (
+    name VARCHAR(255),
+    auth BOOLEAN
+)
